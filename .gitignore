@@ -1,0 +1,17 @@
+# dist
+build
+
+# build dependencies
+node_modules
+
+# DB
+test
+
+# Logs
+yarn-error.log
+
+# Env files
+.env
+
+# MacOS
+.DS_Store
