@@ -150,7 +150,7 @@ const Task = () => {
             }
             const now = new Date();
             const year = Number(newValue.split('-')[0]) || now.getFullYear();
-            const month = Number(newValue.split('-')[1]) || now.getMonth();
+            const month = Number(newValue.split('-')[1]) - 1 || now.getMonth();
             const date = Number(newValue.split('-')[2]) || now.getDate();
             const hour = startDate?.getHours() !== undefined ? startDate.getHours() : now.getHours();
             const minute = startDate?.getMinutes() !== undefined ? startDate.getMinutes() : now.getMinutes();
