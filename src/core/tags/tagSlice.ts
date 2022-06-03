@@ -4,16 +4,14 @@ import getAllTasksFromApi from './getAll';
 import addFromApi from './add';
 import updateFromApi from './update';
 import removeFromApi from './remove';
-import doneFromApi from './done';
-import unDoneFromApi from './unDone';
-import type { Task } from './types';
+import type { Tag } from './types';
 
 type Add = Parameters<typeof addFromApi>[0];
 type Update = Parameters<typeof updateFromApi>[0];
 
-const NAMESPACE = 'task';
+const NAMESPACE = 'tag';
 
-export const getAll = createAsyncThunk<Task[], void, EmptyObject>(
+export const getAll = createAsyncThunk<Tag[], void, EmptyObject>(
   `${NAMESPACE}/getAll`,
   async (_, _thunkApi) => {
     const e = await getAllTasksFromApi();
@@ -53,37 +51,17 @@ export const remove = createAsyncThunk<boolean, number, EmptyObject>(
   }
 );
 
-export const done = createAsyncThunk<boolean, number, EmptyObject>(
-  `${NAMESPACE}/done`,
-  async (id, thunkApi) => {
-    const result = await doneFromApi(id);
-    await thunkApi.dispatch(getAll());
-
-    return result;
-  }
-);
-
-export const unDone = createAsyncThunk<boolean, number, EmptyObject>(
-  `${NAMESPACE}/unDone`,
-  async (id, thunkApi) => {
-    const result = await unDoneFromApi(id);
-    await thunkApi.dispatch(getAll());
-
-    return result;
-  }
-);
-
-const taskSlice = createSlice({
+const tagSlice = createSlice({
   name: NAMESPACE,
   initialState: {
-    tasks: [] as Task[],
+    tags: [] as Tag[],
     loading: false,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(getAll.fulfilled, (state, action) => {
-        state.tasks = action.payload;
+        state.tags = action.payload;
         state.loading = false;
       })
       .addCase(getAll.pending, (state) => {
@@ -115,6 +93,7 @@ const taskSlice = createSlice({
         state.loading = false;
       });
 
+
     builder
       .addCase(remove.fulfilled, (state, _) => {
         state.loading = false;
@@ -125,29 +104,7 @@ const taskSlice = createSlice({
       .addCase(remove.rejected, (state) => {
         state.loading = false;
       });
-
-    builder
-      .addCase(done.fulfilled, (state, _) => {
-        state.loading = false;
-      })
-      .addCase(done.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(done.rejected, (state) => {
-        state.loading = false;
-      });
-
-    builder
-      .addCase(unDone.fulfilled, (state, _) => {
-        state.loading = false;
-      })
-      .addCase(unDone.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(unDone.rejected, (state) => {
-        state.loading = false;
-      });
   },
 });
 
-export default taskSlice;
+export default tagSlice;

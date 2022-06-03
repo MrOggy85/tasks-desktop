@@ -5,9 +5,13 @@ import WithRedux from './core/redux/WithRedux';
 import styles from './App.module.css';
 import Home from './pages/Home';
 import Task from './pages/Task';
+import TagList from './pages/Tag/List';
+import TagDetail from './pages/Tag/Detail';
 
 const HomeWithRedux = WithRedux(Home);
 const TaskWithRedux = WithRedux(Task);
+const TagListWithRedux = WithRedux(TagList);
+const TagDetailWithRedux = WithRedux(TagDetail);
 
 type LinkItemProps = {
   url: string;
@@ -42,10 +46,15 @@ function App() {
         <NavItem>
           <LinkItem url="/task/0" text="New Task" pathname={location.pathname} />
         </NavItem>
+        <NavItem>
+          <LinkItem url="/tag" text="New Tag" pathname={location.pathname} />
+        </NavItem>
       </Nav>
       <Routes>
         <Route path="/" element={<HomeWithRedux />} />
         <Route path="/task/:id" element={<TaskWithRedux />} />
+        <Route path="/tag" element={<TagListWithRedux />} />
+        <Route path="/tag/:id" element={<TagDetailWithRedux />} />
 
       </Routes>
     </>

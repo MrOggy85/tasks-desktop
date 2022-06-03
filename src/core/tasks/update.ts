@@ -1,5 +1,5 @@
 import request from '../request';
-import type { Task } from '../redux/types';
+import type { Task } from './types';
 
 type Update = {
   id: Task['id'];
