@@ -13,15 +13,17 @@ import {
 } from 'reactstrap';
 import { useSelector } from 'react-redux';
 import format from 'date-fns/format';
-
 import { FiTrash2 } from 'react-icons/fi';
+import { parseCronExpression } from 'cron-schedule';
 import useDispatch from '../../core/redux/useDispatch';
 import getPrio from '../../core/getPrio';
 import type { RootState } from '../../core/redux/store';
 import { add, update } from '../../core/tasks/taskSlice';
 import { useNavigate, useParams } from 'react-router-dom';
+import getCron from '../../core/getCron';
 
 type Task = RootState['tasks']['tasks'][0];
+type CronType = Parameters<typeof getCron>[0];
 
 type InputFieldProps = {
   label: string;
@@ -74,7 +76,9 @@ const Task = () => {
   const [priorityDropDownOpen, setPriorityDropDownOpen] = useState(false);
 
   const [repeat, setRepeat] = useState(currentTask?.repeat || '');
-  const [repeatType, setRepeatType] = useState(currentTask?.repeatType || '');
+  const [repeatDropDown, setRepeatDropDown] = useState<CronType | undefined>(undefined);
+  const [repeatDropDownOpen, setRepeatDropDownOpen] = useState(false);
+  const [repeatType, setRepeatType] = useState<Task['repeatType'] | ''>(currentTask?.repeatType || '');
   const [repeatTypeDropDownOpen, setRepeatTypeDropDownOpen] = useState(false);
 
   const onAdd = async () => {
@@ -112,6 +116,8 @@ const Task = () => {
     }
   };
 
+  const nextDate = repeat ? parseCronExpression(repeat).getNextDate(repeatType === 'endDate' ? endDate : undefined) : undefined;
+
   return (
     <Container style={{ marginTop: 10 }}>
 
@@ -124,14 +130,12 @@ const Task = () => {
         value={title}
         onChange={setTitle}
         type="text"
-        step={10000}
       />
       <InputField
         label="Description"
         value={description}
         onChange={setDescription}
         type="textarea"
-        step={10000}
       />
 
       <InputGroup className="mb-3 mt-3">
@@ -190,7 +194,7 @@ const Task = () => {
             }
             const now = new Date();
             const year = Number(newValue.split('-')[0]) || now.getFullYear();
-            const month = Number(newValue.split('-')[1]) || now.getMonth();
+            const month = Number(newValue.split('-')[1]) - 1 || now.getMonth();
             const date = Number(newValue.split('-')[2]) || now.getDate();
             const hour = endDate?.getHours() !== undefined ? endDate.getHours() : now.getHours();
             const minute = endDate?.getMinutes() !== undefined ? endDate.getMinutes() : now.getMinutes();
@@ -252,12 +256,49 @@ const Task = () => {
         </ButtonDropdown>
       </InputGroup>
 
+      <InputGroup style={{ marginBottom: 5 }}>
+        <InputGroupText>Repeat</InputGroupText>
+        <ButtonDropdown
+          isOpen={repeatDropDownOpen}
+          toggle={() => {
+            setRepeatDropDownOpen(!repeatDropDownOpen);
+          }}
+        >
+          <DropdownToggle caret color="light">
+            {repeatDropDown || 'none'}
+          </DropdownToggle>
+          <DropdownMenu>
+            <DropdownItem
+              onClick={() => {
+                setRepeatDropDown(undefined);
+                setRepeat('');
+              }}
+            >
+              None
+            </DropdownItem>
+            {(['weekly', 'monthly', 'yearly'] as CronType[]).map((x) => (
+              <DropdownItem
+                key={x}
+                onClick={() => {
+                  setRepeatDropDown(x);
+                  setRepeat(getCron(x, endDate, repeatType || 'completionDate'));
+                }}
+              >
+                {x}
+              </DropdownItem>
+            ))}
+          </DropdownMenu>
+        </ButtonDropdown>
+      </InputGroup>
+
       <InputField
-        label="Repeat"
+        label="Repeat CRON pattern"
         value={repeat}
         onChange={setRepeat}
         type="text"
       />
+      <p style={{ margin: 0, color: '#666', fontSize: 11 }}>{nextDate ? `Next Date: ${nextDate.toISOString()} UTC - ${nextDate.toLocaleString()} JST` : ''}</p>
+
       <InputGroup style={{ marginBottom: 5 }}>
         <InputGroupText>RepeatType</InputGroupText>
         <ButtonDropdown
