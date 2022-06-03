@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import Badge from 'react-bootstrap/Badge';
 import { FiTrash2, FiEdit, FiCheckSquare, FiSquare, FiRepeat, FiRefreshCw } from 'react-icons/fi';
 import format from 'date-fns/format';
+import isAfter from 'date-fns/isAfter';
 import getPrio from '../../core/getPrio';
 import useDispatch from '../../core/redux/useDispatch';
 import { getAll, remove, done, unDone } from '../../core/tasks/taskSlice';
@@ -163,9 +164,10 @@ const Home = () => {
         <tbody>
           {tasks.map((x) => {
             const prio = getPrio(x.priority);
+            const notStarted = x.startDate ? isAfter(new Date(x.startDate), new Date()) : false;
 
             return (
-              <tr key={x.id}>
+              <tr key={x.id} style={{ opacity: notStarted ? 0.5 : 1 }}>
                 <td>
                   <Button
                     style={{ marginRight: 4 }}
