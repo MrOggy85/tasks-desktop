@@ -7,6 +7,7 @@ type Add = {
   startDate: Task['startDate'];
   endDate: Task['endDate'];
   repeat: Task['repeat'];
+  repeatType: Task['repeatType'];
   priority: Task['priority'];
 };
 

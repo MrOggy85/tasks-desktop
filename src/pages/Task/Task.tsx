@@ -89,6 +89,7 @@ const Task = () => {
       endDate: endDate ? endDate.toISOString() : undefined,
       priority,
       repeat,
+      repeatType: repeatType ? repeatType : 'completionDate',
     }));
 
     if (action.type === add.fulfilled.type) {
@@ -107,6 +108,7 @@ const Task = () => {
       endDate: endDate ? endDate.toISOString() : undefined,
       priority,
       repeat,
+      repeatType: repeatType ? repeatType : 'completionDate',
     }));
 
     if (action.type === update.fulfilled.type) {

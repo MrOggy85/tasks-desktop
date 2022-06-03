@@ -1,17 +1,18 @@
 import request from '../request';
 import type { Task } from '../redux/types';
 
-type Add = {
+type Update = {
   id: Task['id'];
   title: Task['title'];
   description: Task['description'];
   startDate: Task['startDate'];
   endDate: Task['endDate'];
   repeat: Task['repeat'];
+  repeatType: Task['repeatType'];
   priority: Task['priority'];
 };
 
-async function update(task: Add): Promise<boolean> {
+async function update(task: Update): Promise<boolean> {
   const data = await request({
     path: '/tasks', method: 'PUT', data:
     {
