@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Container, Table, Button, Spinner, InputGroup,
   InputGroupText, DropdownItem,
@@ -14,7 +15,7 @@ import isAfter from 'date-fns/isAfter';
 import getPrio from '../../core/getPrio';
 import useDispatch from '../../core/redux/useDispatch';
 import { getAll, remove, done, unDone } from '../../core/tasks/taskSlice';
-import { useState } from 'react';
+import Pill from '../../components/Pill';
 
 type Sorting = 'createdDate' | 'updatedDate' | 'title' | 'startDate' | 'endDate' | 'priority';
 
@@ -214,6 +215,7 @@ const Home = () => {
                 <td>
                   <Badge text={prio.text} bg={prio.bg}>{prio.content}</Badge>
                   {x.repeat ? <Badge style={{ marginLeft: 4 }} bg="success"><FiRepeat /></Badge> : ''}
+                  {x.tags.map(t => <div key={t.id} style={{ marginLeft: 4, display: 'inline-block' }}><Pill name={t.name} bgColor={t.bgColor} textColor={t.textColor} /></div>)}
                 </td>
               </tr>
             );

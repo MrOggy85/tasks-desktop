@@ -1,3 +1,5 @@
+import type { Tag } from "../tags/types";
+
 export type Task = {
   id: number;
   title: string;
@@ -27,4 +29,6 @@ export type Task = {
    * timestamp default fields
    */
   updatedAt?: string;
+
+  tags: Tag[];
 };
