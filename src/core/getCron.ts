@@ -1,7 +1,7 @@
 import type { RootState } from "./redux/store";
 
 type Task = RootState['tasks']['tasks'][0];
-type CronType = 'weekly' | 'monthly' | 'yearly';
+type CronType = 'daily' | 'weekdays' | 'weekends' | 'weekly' | 'monthly' | 'yearly';
 
 /**
  * 0 = SUN
@@ -34,6 +34,11 @@ function getCron(type: CronType, endDate: Date | undefined, repeatType: Task['re
   let day = fromDate.getDate().toString();
   let month = fromDate.getMonth().toString();
   let dayWeek = '*';
+
+  if (type === 'daily') {
+    day = '*';
+    month = '*';
+  }
 
   if (type === 'monthly') {
     month = '*/1';

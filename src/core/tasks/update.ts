@@ -10,6 +10,7 @@ type Update = {
   repeat: Task['repeat'];
   repeatType: Task['repeatType'];
   priority: Task['priority'];
+  tagIds: number[];
 };
 
 async function update(task: Update): Promise<boolean> {

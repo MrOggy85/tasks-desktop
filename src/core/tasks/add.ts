@@ -9,6 +9,7 @@ type Add = {
   repeat: Task['repeat'];
   repeatType: Task['repeatType'];
   priority: Task['priority'];
+  tagIds: number[];
 };
 
 async function add(task: Add): Promise<boolean> {
