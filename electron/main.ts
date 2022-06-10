@@ -1,7 +1,18 @@
 import 'dotenv/config';
 import * as path from 'path';
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain, Notification } from 'electron';
 import * as isDev from 'electron-is-dev';
+
+function showNotification(title: string, body: string) {
+  new Notification({ title, body }).show();
+}
+
+ipcMain.on('notify', (event, arg) => {
+  const { title, body } = arg;
+  event.returnValue = '';
+  showNotification(title, body);
+
+});
 
 function createWindow() {
   // Create the browser window.
